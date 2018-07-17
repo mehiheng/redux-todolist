@@ -11,18 +11,25 @@ class App extends Component {
     this.todosAPI = todosAPI;
 
     this.state = {
-      todos: this.todosAPI.filerByStatus(Todo.ALL).slice(),
+      todos: [],
       statusOfList: Todo.ALL
     };
+    console.log('1111111111');
+  }
+
+  componentDidMount() {
+    this.setState({
+      todos: this.deepCopy(this.todosAPI.filerByStatus(Todo.ALL))
+    });
   }
 
   add(event) {
     if (event.keyCode === 13) {
       this.todosAPI.add(new Todo(this.refs.newItem.value));
-      const todos = this.todosAPI
-        .filerByStatus(this.state.statusOfList)
-        .slice();
-      this.setState({ todos, statusOfList: this.state.statusOfList });
+      const todos = this.deepCopy(
+        this.todosAPI.filerByStatus(this.state.statusOfList)
+      );
+      this.setState({ todos });
       this.refs.newItem.value = '';
       console.log(todos);
     }
@@ -30,22 +37,30 @@ class App extends Component {
 
   toggleActive(viewId) {
     this.todosAPI.toggleActive(viewId);
-    const todos = this.todosAPI.filerByStatus(this.state.statusOfList).slice();
-    this.setState({ todos, statusOfList: this.state.statusOfList });
+    const todos = this.deepCopy(
+      this.todosAPI.filerByStatus(this.state.statusOfList)
+    );
+    this.setState({ todos });
   }
 
   showFilterList(event) {
     console.log(this.state.todos);
     const statusOfList = event.target.attributes.getNamedItem('data-filter')
       .value;
-    const todos = this.todosAPI.filerByStatus(statusOfList).slice();
+    const todos = this.deepCopy(this.todosAPI.filerByStatus(statusOfList));
     this.setState({ todos, statusOfList });
   }
 
   updateItemContent(viewId, content) {
     this.todosAPI.updateItemContent(viewId, content);
-    const todos = this.todosAPI.filerByStatus(this.state.statusOfList).slice();
+    const todos = this.deepCopy(
+      this.todosAPI.filerByStatus(this.state.statusOfList)
+    );
     this.setState({ todos, statusOfList: this.state.statusOfList });
+  }
+
+  deepCopy(array) {
+    return JSON.parse(JSON.stringify(array));
   }
 
   render() {
