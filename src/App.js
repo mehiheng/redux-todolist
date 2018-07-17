@@ -3,46 +3,25 @@ import './App.css';
 import Todo from './model/Todo';
 import TodoItem from './component/TodoItem';
 import classNames from 'classnames';
+import todosAPI from './api/TodoResourseAPI';
 
-const todosViewModel = {
-  todos: [],
-  add(item) {
-    this.todos.push(item);
-  },
-  filerByStatus(status) {
-    if (status === Todo.ALL) {
-      return this.todos;
-    }
-    return this.todos.filter(item => item.status === status);
-  },
-  toggleActive(viewId) {
-    let todo = this.todos.find(item => item.viewId === viewId);
-    if (todo !== undefined) {
-      todo.toggleActive();
-    }
-  },
-  updateItemContent(viewId, content) {
-    let todo = this.todos.find(item => item.viewId === viewId);
-    if (todo !== undefined) {
-      todo.content = content;
-    }
-  }
-};
 class App extends Component {
   constructor(props) {
     super(props);
-    this.todos = todosViewModel;
+    this.todosAPI = todosAPI;
 
     this.state = {
-      todos: this.todos.filerByStatus(Todo.ALL).slice(),
+      todos: this.todosAPI.filerByStatus(Todo.ALL).slice(),
       statusOfList: Todo.ALL
     };
   }
 
   add(event) {
     if (event.keyCode === 13) {
-      this.todos.add(new Todo(this.refs.newItem.value));
-      const todos = this.todos.filerByStatus(this.state.statusOfList).slice();
+      this.todosAPI.add(new Todo(this.refs.newItem.value));
+      const todos = this.todosAPI
+        .filerByStatus(this.state.statusOfList)
+        .slice();
       this.setState({ todos, statusOfList: this.state.statusOfList });
       this.refs.newItem.value = '';
       console.log(todos);
@@ -50,8 +29,8 @@ class App extends Component {
   }
 
   toggleActive(viewId) {
-    this.todos.toggleActive(viewId);
-    const todos = this.todos.filerByStatus(this.state.statusOfList).slice();
+    this.todosAPI.toggleActive(viewId);
+    const todos = this.todosAPI.filerByStatus(this.state.statusOfList).slice();
     this.setState({ todos, statusOfList: this.state.statusOfList });
   }
 
@@ -59,13 +38,13 @@ class App extends Component {
     console.log(this.state.todos);
     const statusOfList = event.target.attributes.getNamedItem('data-filter')
       .value;
-    const todos = this.todos.filerByStatus(statusOfList).slice();
+    const todos = this.todosAPI.filerByStatus(statusOfList).slice();
     this.setState({ todos, statusOfList });
   }
 
   updateItemContent(viewId, content) {
-    this.todos.updateItemContent(viewId, content);
-    const todos = this.todos.filerByStatus(this.state.statusOfList).slice();
+    this.todosAPI.updateItemContent(viewId, content);
+    const todos = this.todosAPI.filerByStatus(this.state.statusOfList).slice();
     this.setState({ todos, statusOfList: this.state.statusOfList });
   }
 
@@ -109,7 +88,7 @@ class App extends Component {
           <ul className="filters">
             <li>
               <a
-                href="#"
+                href="#all"
                 onClick={e => this.showFilterList(e)}
                 data-filter="all"
                 className={classNames({
@@ -121,7 +100,7 @@ class App extends Component {
             </li>
             <li>
               <a
-                href="#"
+                href="#active"
                 onClick={e => this.showFilterList(e)}
                 data-filter="active"
                 className={classNames({
@@ -133,7 +112,7 @@ class App extends Component {
             </li>
             <li>
               <a
-                href="#"
+                href="#completed"
                 onClick={e => this.showFilterList(e)}
                 data-filter="completed"
                 className={classNames({
