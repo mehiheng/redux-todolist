@@ -47,13 +47,16 @@ class App extends Component {
     }
   }
 
-  add() {
-    this
-      .currentState
-      .todos
-      .add(new Todo(this.refs.newItem.value));
-    this.setState(this.currentState);
-    console.log(this.todos);
+  add(event) {
+    if (event.keyCode === 13) {
+      this
+        .currentState
+        .todos
+        .add(new Todo(this.refs.newItem.value));
+      this.setState(this.currentState);
+      this.refs.newItem.value = ""
+      console.log(this.todos);
+    }
   }
 
   toggleActive(viewId) {
@@ -98,7 +101,7 @@ class App extends Component {
         <div>
           <input
             className="input-text"
-            onKeyUp={e => e.keyCode === 13 && this.add()}
+            onKeyUp={e => this.add(e)}
             id="todo-creator"
             ref="newItem"></input>
           <div className="button" onClick={e => this.add()}>Add</div>
@@ -120,9 +123,11 @@ class App extends Component {
             })()}
           </ol>
         </div>
-        <button onClick={e => this.showAll()}>all</button>
-        <button onClick={e => this.showActive()}>active</button>
-        <button onClick={e => this.showCompleted()}>completed</button>
+        <div>
+          <button onClick={e => this.showAll()}>all</button>
+          <button onClick={e => this.showActive()}>active</button>
+          <button onClick={e => this.showCompleted()}>completed</button>
+        </div>
 
       </div>
     );
