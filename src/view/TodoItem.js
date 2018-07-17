@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Todo from '../model/Todo'
+import '../App.css'
 
 class TodoItem extends Component {
     constructor(props) {
@@ -44,6 +45,11 @@ class TodoItem extends Component {
         const item = this.props.item;
         return (
             <li className={item.status}>
+            {
+                item.status === Todo.ACTIVE ?
+                <input type="checkbox" className="done-todo" onClick={e => this.complete(item.viewId)}/> :
+                <input type="checkbox" className="done-todo" checked onClick={e => this.reactive(item.viewId)}/> 
+            }
                 <span onDoubleClick={e => this.changeToEditable(e)}>
                     {this.currentState.status === "read"
                         ? item.content
@@ -51,9 +57,6 @@ class TodoItem extends Component {
                             defaultValue={item.content}
                             onKeyUp={e => this.updateItem(e, item.viewId, e.currentTarget.value)}></input>}
                 </span>
-                {item.status === Todo.ACTIVE
-                    ? <button onClick={e => this.complete(item.viewId)}>v</button>
-                    : <button onClick={e => this.reactive(item.viewId)}>r</button>}
             </li>
         );
     }

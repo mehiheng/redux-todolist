@@ -85,7 +85,7 @@ list-style: none;
   outline: none;
 }
 
-.checked {
+.completed {
   color: #999;
   text-decoration: line-through;
 }
