@@ -54,7 +54,7 @@ class App extends Component {
     super(props);
     this.todos = todosViewModel;
 
-    this.state = {
+    this.currentState = {
       todos: this.todos,
       statusOfList: "all"
     }
@@ -62,47 +62,47 @@ class App extends Component {
 
   add() {
     this
-      .state
+      .currentState
       .todos
       .add(new Todo(this.refs.newItem.value));
-    this.setState(this.state);
+    this.setState(this.currentState);
     console.log(this.todos);
   }
 
   complete(viewId) {
     this
-      .state
+      .currentState
       .todos
       .complete(viewId);
-    this.setState(this.state);
+    this.setState(this.currentState);
   }
 
   reactive(viewId) {
     this
-      .state
+      .currentState
       .todos
       .reactive(viewId);
-    this.setState(this.state);
+    this.setState(this.currentState);
   }
 
   showAll() {
-    console.log(this.state.todos);
-    this.state.statusOfList = "all";
-    this.setState(this.state);
+    console.log(this.currentState.todos);
+    this.currentState.statusOfList = "all";
+    this.setState(this.currentState);
   }
 
   showActive() {
-    this.state.statusOfList = Todo.ACTIVE;
-    this.setState(this.state);
+    this.currentState.statusOfList = Todo.ACTIVE;
+    this.setState(this.currentState);
   }
 
   showCompleted() {
-    this.state.statusOfList = Todo.COMPLETED;
-    this.setState(this.state);
+    this.currentState.statusOfList = Todo.COMPLETED;
+    this.setState(this.currentState);
   }
   updateItemContent(viewId, content) {
     this
-      .state
+      .currentState
       .todos
       .updateItemContent(viewId, content);
   }
@@ -119,7 +119,7 @@ class App extends Component {
         <div>
           <input
             className="input-text"
-            onKeyUp={e => e.keyCode == 13 && this.add()}
+            onKeyUp={e => e.keyCode === 13 && this.add()}
             id="todo-creator"
             ref="newItem"></input>
           <div className="button" onClick={e => this.add()}>Add</div>
@@ -128,9 +128,9 @@ class App extends Component {
           <ol>
             {(() => {
               return this
-                .state
+                .currentState
                 .todos
-                .filerByStatus(this.state.statusOfList)
+                .filerByStatus(this.currentState.statusOfList)
                 .map((item) => (
                   <TodoItem
                     item={item}
