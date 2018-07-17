@@ -14,6 +14,10 @@ export default class Todo{
         return "completed";
     }
 
+    static get ALL() {
+        return "all";
+    }
+
     
     complete(){
         this.status = Todo.COMPLETED;

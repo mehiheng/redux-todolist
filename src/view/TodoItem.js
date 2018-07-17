@@ -5,14 +5,14 @@ import '../App.css'
 class TodoItem extends Component {
     constructor(props) {
         super(props);
-        this.currentState = {
+        this.state = {
             status: "read"
         };
     }
 
     changeToEditable() {
-        this.currentState.status = "write"
-        this.setState(this.currentState)
+        this.state.status = "write"
+        this.setState(this.state)
     }
 
     updateItem(e, viewId, content) {
@@ -20,14 +20,14 @@ class TodoItem extends Component {
             this.props
                 .updateItemContent(viewId, content);
             console.log(this.props.item);
-            this.currentState.status = "read"
-            this.setState(this.currentState)
+            this.state.status = "read"
+            this.setState(this.state)
         }
     }
 
     toggleActive(viewId) {
-        this.currentState.status = "read"
-        this.setState(this.currentState)
+        this.state.status = "read"
+        this.setState(this.state)
         this
             .props
             .toggleActiveHandler(viewId)
@@ -41,7 +41,7 @@ class TodoItem extends Component {
                 <input type="checkbox" className="done-todo" defaultChecked={item.status === Todo.COMPLETED} onClick={e => this.toggleActive(item.viewId)}/> 
             }
                 <span onDoubleClick={e => this.changeToEditable(e)}>
-                    {this.currentState.status === "read"
+                    {this.state.status === "read"
                         ? item.content
                         : <input autoFocus
                             defaultValue={item.content}

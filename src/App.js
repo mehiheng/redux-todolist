@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import './App.css'
 import Todo from './model/Todo'
 import TodoItem from './view/TodoItem'
+import classNames from 'classnames'
 
 const todosViewModel = {
   todos: [],
@@ -11,7 +12,7 @@ const todosViewModel = {
       .push(item);
   },
   filerByStatus(status) {
-    if (status === "all") {
+    if (status === Todo.ALL) {
       return this.todos;
     }
     return this
@@ -41,19 +42,25 @@ class App extends Component {
     super(props);
     this.todos = todosViewModel;
 
-    this.currentState = {
+    this.state = {
       todos: this.todos,
-      statusOfList: "all"
+      statusOfList: Todo.ALL
     }
   }
+
+  // componentDidMount() {   var setState = this.setState;   var router = Router({
+  //     '/': setState.bind(this, {nowShowing: app.ALL_TODOS}),     '/active':
+  // setState.bind(this, {nowShowing: app.ACTIVE_TODOS}),     '/completed':
+  // setState.bind(this, {nowShowing: app.COMPLETED_TODOS})   });
+  // router.init('/'); }
 
   add(event) {
     if (event.keyCode === 13) {
       this
-        .currentState
+        .state
         .todos
         .add(new Todo(this.refs.newItem.value));
-      this.setState(this.currentState);
+      this.setState(this.state);
       this.refs.newItem.value = ""
       console.log(this.todos);
     }
@@ -61,30 +68,25 @@ class App extends Component {
 
   toggleActive(viewId) {
     this
-      .currentState
+      .state
       .todos
       .toggleActive(viewId);
-    this.setState(this.currentState);
+    this.setState(this.state);
   }
 
-  showAll() {
-    console.log(this.currentState.todos);
-    this.currentState.statusOfList = "all";
-    this.setState(this.currentState);
+  showFilterList(event) {
+    console.log(this.state.todos);
+    this.state.statusOfList = event
+      .target
+      .attributes
+      .getNamedItem("data-filter")
+      .value
+    this.setState(this.state);
   }
 
-  showActive() {
-    this.currentState.statusOfList = Todo.ACTIVE;
-    this.setState(this.currentState);
-  }
-
-  showCompleted() {
-    this.currentState.statusOfList = Todo.COMPLETED;
-    this.setState(this.currentState);
-  }
   updateItemContent(viewId, content) {
     this
-      .currentState
+      .state
       .todos
       .updateItemContent(viewId, content);
   }
@@ -110,9 +112,9 @@ class App extends Component {
           <ol>
             {(() => {
               return this
-                .currentState
+                .state
                 .todos
-                .filerByStatus(this.currentState.statusOfList)
+                .filerByStatus(this.state.statusOfList)
                 .map((item) => (
                   <TodoItem
                     item={item}
@@ -124,9 +126,35 @@ class App extends Component {
           </ol>
         </div>
         <div>
-          <button onClick={e => this.showAll()}>all</button>
-          <button onClick={e => this.showActive()}>active</button>
-          <button onClick={e => this.showCompleted()}>completed</button>
+          <ul className="filters">
+            <li>
+              <a
+                href="#"
+                onClick={e => this.showFilterList(e)}
+                data-filter="all"
+                className={classNames({
+                selected: this.state.statusOfList === Todo.ALL
+              })}>ALL</a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={e => this.showFilterList(e)}
+                data-filter="active"
+                className={classNames({
+                selected: this.state.statusOfList === Todo.ACTIVE
+              })}>Active</a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={e => this.showFilterList(e)}
+                data-filter="completed"
+                className={classNames({
+                selected: this.state.statusOfList === Todo.COMPLETED
+              })}>Complete</a>
+            </li>
+          </ul>
         </div>
 
       </div>
