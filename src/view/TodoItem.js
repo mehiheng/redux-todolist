@@ -11,26 +11,26 @@ class TodoItem extends Component {
     }
 
     changeToEditable(){
-        this.state.status = "write";
-        this.setState(this.state);
+        this.state.status = "write"
+        this.setState(this.state)
     }
 
     updateItem(viewId, content){
         this.props.updateItemContent(viewId, content);   
         console.log(this.props.item);
-        this.state.status = "read";
-        this.setState(this.state);
+        this.state.status = "read"
+        this.setState(this.state)
     }
 
     complete(viewId){
-        this.state.status = "read";
-        this.setState(this.state);
-        this.props.completeHandler(viewId);
+        this.state.status = "read"
+        this.setState(this.state)
+        this.props.completeHandler(viewId)
     }
 
     reactive(viewId){
-        this.state.status = "read";
-        this.setState(this.state);
+        this.state.status = "read"
+        this.setState(this.state)
         this.props.reactiveHandler(viewId)
     }
 
