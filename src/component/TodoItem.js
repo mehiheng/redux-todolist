@@ -11,22 +11,19 @@ class TodoItem extends Component {
   }
 
   changeToEditable() {
-    this.state.status = 'write';
-    this.setState(this.state);
+    this.setState({ status: 'write' });
   }
 
   updateItem(e, viewId, content) {
     if (e.keyCode === 13) {
       this.props.updateItemContent(viewId, content);
       console.log(this.props.item);
-      this.state.status = 'read';
-      this.setState(this.state);
+      this.setState({ status: 'read' });
     }
   }
 
   toggleActive(viewId) {
-    this.state.status = 'read';
-    this.setState(this.state);
+    this.setState({ status: 'read' });
     this.props.toggleActiveHandler(viewId);
   }
 

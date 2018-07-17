@@ -34,35 +34,39 @@ class App extends Component {
     this.todos = todosViewModel;
 
     this.state = {
-      todos: this.todos,
+      todos: this.todos.filerByStatus(Todo.ALL).slice(),
       statusOfList: Todo.ALL
     };
   }
 
   add(event) {
     if (event.keyCode === 13) {
-      this.state.todos.add(new Todo(this.refs.newItem.value));
-      this.setState(this.state);
+      this.todos.add(new Todo(this.refs.newItem.value));
+      const todos = this.todos.filerByStatus(this.state.statusOfList).slice();
+      this.setState({ todos, statusOfList: this.state.statusOfList });
       this.refs.newItem.value = '';
-      console.log(this.todos);
+      console.log(todos);
     }
   }
 
   toggleActive(viewId) {
-    this.state.todos.toggleActive(viewId);
-    this.setState(this.state);
+    this.todos.toggleActive(viewId);
+    const todos = this.todos.filerByStatus(this.state.statusOfList).slice();
+    this.setState({ todos, statusOfList: this.state.statusOfList });
   }
 
   showFilterList(event) {
     console.log(this.state.todos);
-    this.state.statusOfList = event.target.attributes.getNamedItem(
-      'data-filter'
-    ).value;
-    this.setState(this.state);
+    const statusOfList = event.target.attributes.getNamedItem('data-filter')
+      .value;
+    const todos = this.todos.filerByStatus(statusOfList).slice();
+    this.setState({ todos, statusOfList });
   }
 
   updateItemContent(viewId, content) {
-    this.state.todos.updateItemContent(viewId, content);
+    this.todos.updateItemContent(viewId, content);
+    const todos = this.todos.filerByStatus(this.state.statusOfList).slice();
+    this.setState({ todos, statusOfList: this.state.statusOfList });
   }
 
   render() {
@@ -88,18 +92,16 @@ class App extends Component {
         <div>
           <ol>
             {(() => {
-              return this.state.todos
-                .filerByStatus(this.state.statusOfList)
-                .map(item => (
-                  <TodoItem
-                    item={item}
-                    key={item.viewId}
-                    toggleActiveHandler={viewId => this.toggleActive(viewId)}
-                    updateItemContent={(viewId, content) =>
-                      this.updateItemContent(viewId, content)
-                    }
-                  />
-                ));
+              return this.state.todos.map(item => (
+                <TodoItem
+                  item={item}
+                  key={item.viewId}
+                  toggleActiveHandler={viewId => this.toggleActive(viewId)}
+                  updateItemContent={(viewId, content) =>
+                    this.updateItemContent(viewId, content)
+                  }
+                />
+              ));
             })()}
           </ol>
         </div>
