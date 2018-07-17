@@ -22,4 +22,8 @@ export default class Todo{
     reactive(){
         this.status = Todo.ACTIVE;
     }
+
+    toggleActive() {
+        this.status = this.status === Todo.ACTIVE ? Todo.COMPLETED : Todo.ACTIVE;
+    }
 }

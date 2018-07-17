@@ -10,16 +10,6 @@ const todosViewModel = {
       .todos
       .push(item);
   },
-
-  complete(viewId) {
-    let todo = this
-      .todos
-      .find((item) => item.viewId === viewId);
-    if (todo !== undefined) {
-      todo.complete();
-    }
-  },
-
   filerByStatus(status) {
     if (status === "all") {
       return this.todos;
@@ -28,17 +18,14 @@ const todosViewModel = {
       .todos
       .filter(item => item.status === status);
   },
-
-  reactive(viewId) {
+  toggleActive(viewId) {
     let todo = this
       .todos
       .find((item) => item.viewId === viewId);
     if (todo !== undefined) {
-      todo.reactive();
+      todo.toggleActive();
     }
-
   },
-
   updateItemContent(viewId, content) {
     let todo = this
       .todos
@@ -69,19 +56,11 @@ class App extends Component {
     console.log(this.todos);
   }
 
-  complete(viewId) {
+  toggleActive(viewId) {
     this
       .currentState
       .todos
-      .complete(viewId);
-    this.setState(this.currentState);
-  }
-
-  reactive(viewId) {
-    this
-      .currentState
-      .todos
-      .reactive(viewId);
+      .toggleActive(viewId);
     this.setState(this.currentState);
   }
 
@@ -135,8 +114,7 @@ class App extends Component {
                   <TodoItem
                     item={item}
                     key={item.viewId}
-                    completeHandler={viewId => this.complete(viewId)}
-                    reactiveHandler={viewId => this.reactive(viewId)}
+                    toggleActiveHandler={viewId => this.toggleActive(viewId)}
                     updateItemContent={(viewId, content) => this.updateItemContent(viewId, content)}></TodoItem>
                 ))
             })()}

@@ -25,20 +25,12 @@ class TodoItem extends Component {
         }
     }
 
-    complete(viewId) {
+    toggleActive(viewId) {
         this.currentState.status = "read"
         this.setState(this.currentState)
         this
             .props
-            .completeHandler(viewId)
-    }
-
-    reactive(viewId) {
-        this.currentState.status = "read"
-        this.setState(this.currentState)
-        this
-            .props
-            .reactiveHandler(viewId)
+            .toggleActiveHandler(viewId)
     }
 
     render() {
@@ -46,9 +38,7 @@ class TodoItem extends Component {
         return (
             <li className={item.status}>
             {
-                item.status === Todo.ACTIVE ?
-                <input type="checkbox" className="done-todo" onClick={e => this.complete(item.viewId)}/> :
-                <input type="checkbox" className="done-todo" checked onClick={e => this.reactive(item.viewId)}/> 
+                <input type="checkbox" className="done-todo" defaultChecked={item.status === Todo.COMPLETED} onClick={e => this.toggleActive(item.viewId)}/> 
             }
                 <span onDoubleClick={e => this.changeToEditable(e)}>
                     {this.currentState.status === "read"
