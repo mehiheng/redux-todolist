@@ -26,9 +26,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(add(todos));
     },
     onShowFilterList: statusOfList => {
-      console.log('2222' + statusOfList);
       const todos = deepCopy(todosAPI.filerByStatus(statusOfList));
-      console.log('12312312=' + todos);
       dispatch(showFilterList(todos));
     },
     onUpdateItemContent: (viewId, content, statusOfList) => {
