@@ -9,6 +9,7 @@ const todosAPI = {
     if (status === Todo.ALL) {
       return this.todos;
     }
+    console.log(this.todos);
     return this.todos.filter(item => item.status === status);
   },
   toggleActive(viewId) {

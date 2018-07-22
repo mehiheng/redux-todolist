@@ -5,58 +5,43 @@ import TodoItem from './component/TodoItem';
 import classNames from 'classnames';
 import todosAPI from './api/TodoResourseAPI';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
-    this.todosAPI = todosAPI;
+    //this.todosAPI = todosAPI;
 
-    this.state = {
-      todos: [],
-      statusOfList: Todo.ALL
-    };
-    console.log('1111111111');
+    // this.state = {
+    //   todos: [],
+    //   statusOfList: Todo.ALL
+    // };
   }
 
   componentDidMount() {
-    this.setState({
-      todos: this.deepCopy(this.todosAPI.filerByStatus(Todo.ALL))
-    });
+    this.props.onComponentDidMount();
   }
 
   add(event) {
-    if (event.keyCode === 13) {
-      this.todosAPI.add(new Todo(this.refs.newItem.value));
-      const todos = this.deepCopy(
-        this.todosAPI.filerByStatus(this.state.statusOfList)
+    if (event.keyCode === 13 || event.button === 0) {
+      this.props.onAdd(
+        new Todo(this.refs.newItem.value),
+        this.props.statusOfList
       );
-      this.setState({ todos });
       this.refs.newItem.value = '';
-      console.log(todos);
     }
   }
 
   toggleActive(viewId) {
-    this.todosAPI.toggleActive(viewId);
-    const todos = this.deepCopy(
-      this.todosAPI.filerByStatus(this.state.statusOfList)
-    );
-    this.setState({ todos });
+    this.props.onToggleActive(viewId, this.props.statusOfList);
   }
 
   showFilterList(event) {
-    console.log(this.state.todos);
-    const statusOfList = event.target.attributes.getNamedItem('data-filter')
-      .value;
-    const todos = this.deepCopy(this.todosAPI.filerByStatus(statusOfList));
-    this.setState({ todos, statusOfList });
+    this.props.onShowFilterList(
+      event.target.attributes.getNamedItem('data-filter').value
+    );
   }
 
   updateItemContent(viewId, content) {
-    this.todosAPI.updateItemContent(viewId, content);
-    const todos = this.deepCopy(
-      this.todosAPI.filerByStatus(this.state.statusOfList)
-    );
-    this.setState({ todos, statusOfList: this.state.statusOfList });
+    this.props.onUpdateItemContent(viewId, content, this.props.statusOfList);
   }
 
   deepCopy(array) {
@@ -79,14 +64,15 @@ class App extends Component {
             id="todo-creator"
             ref="newItem"
           />
-          <div className="button" onClick={e => this.add()}>
+          <div className="button" onClick={e => this.add(e)}>
             Add
           </div>
         </div>
         <div>
           <ol>
             {(() => {
-              return this.state.todos.map(item => (
+              console.log(this.props.todolist);
+              return this.props.todolist.map(item => (
                 <TodoItem
                   item={item}
                   key={item.viewId}
@@ -107,7 +93,7 @@ class App extends Component {
                 onClick={e => this.showFilterList(e)}
                 data-filter="all"
                 className={classNames({
-                  selected: this.state.statusOfList === Todo.ALL
+                  selected: this.props.statusOfList === Todo.ALL
                 })}
               >
                 ALL
@@ -119,7 +105,7 @@ class App extends Component {
                 onClick={e => this.showFilterList(e)}
                 data-filter="active"
                 className={classNames({
-                  selected: this.state.statusOfList === Todo.ACTIVE
+                  selected: this.props.statusOfList === Todo.ACTIVE
                 })}
               >
                 Active
@@ -131,7 +117,7 @@ class App extends Component {
                 onClick={e => this.showFilterList(e)}
                 data-filter="completed"
                 className={classNames({
-                  selected: this.state.statusOfList === Todo.COMPLETED
+                  selected: this.props.statusOfList === Todo.COMPLETED
                 })}
               >
                 Complete
@@ -143,5 +129,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;

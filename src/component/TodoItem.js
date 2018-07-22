@@ -10,9 +10,9 @@ class TodoItem extends Component {
     };
   }
 
-  changeToEditable() {
+  changeToEditable = () => {
     this.setState({ status: 'write' });
-  }
+  };
 
   updateItem(e, viewId, content) {
     if (e.keyCode === 13) {
