@@ -6,8 +6,7 @@ import {
   deepCopy,
   add,
   updateItemContent,
-  toggleActive,
-  componentDidMount
+  toggleActive
 } from '../actions';
 import Todo from '../model/Todo';
 
@@ -21,27 +20,26 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAdd: (todo, statusOfList) => {
-      todosAPI.add(todo);
-      const todos = deepCopy(todosAPI.filerByStatus(statusOfList));
-      dispatch(add(todos));
+      todosAPI.add(todo, statusOfList, todos => dispatch(add(todos)));
     },
+
     onShowFilterList: statusOfList => {
-      const todos = deepCopy(todosAPI.filerByStatus(statusOfList));
-      dispatch(showFilterList(todos));
+      todosAPI.filerByStatus(statusOfList, todos =>
+        dispatch(showFilterList(todos))
+      );
     },
+
     onUpdateItemContent: (viewId, content, statusOfList) => {
-      todosAPI.updateItemContent(viewId, content);
-      const todos = deepCopy(todosAPI.filerByStatus(statusOfList));
-      dispatch(updateItemContent(todos));
+      todosAPI.updateItemContent(viewId, content, statusOfList, todos =>
+        dispatch(updateItemContent(todos))
+      );
     },
-    onToggleActive: (viewId, statusOfList) => {
-      todosAPI.toggleActive(viewId);
-      const todos = deepCopy(todosAPI.filerByStatus(statusOfList));
-      dispatch(toggleActive(todos));
-    },
-    onComponentDidMount: () => {
-      const todos = deepCopy(todosAPI.filerByStatus(Todo.ALL));
-      dispatch(componentDidMount(todos));
+
+    onToggleActive: (item, statusOfList) => {
+      console.log('toggler' + item);
+      todosAPI.toggleActive(item, statusOfList, todos =>
+        dispatch(toggleActive(todos))
+      );
     }
   };
 };

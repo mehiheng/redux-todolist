@@ -16,9 +16,9 @@ export default class App extends Component {
     // };
   }
 
-  componentDidMount() {
-    this.props.onComponentDidMount();
-  }
+  // componentDidMount() {
+  //   this.props.onComponentDidMount();
+  // }
 
   add(event) {
     if (event.keyCode === 13 || event.button === 0) {
@@ -30,8 +30,8 @@ export default class App extends Component {
     }
   }
 
-  toggleActive(viewId) {
-    this.props.onToggleActive(viewId, this.props.statusOfList);
+  toggleActive(item) {
+    this.props.onToggleActive(item, this.props.statusOfList);
   }
 
   showFilterList(event) {
@@ -71,12 +71,11 @@ export default class App extends Component {
         <div>
           <ol>
             {(() => {
-              console.log(this.props.todolist);
               return this.props.todolist.map(item => (
                 <TodoItem
                   item={item}
                   key={item.viewId}
-                  toggleActiveHandler={viewId => this.toggleActive(viewId)}
+                  toggleActiveHandler={item => this.toggleActive(item)}
                   updateItemContent={(viewId, content) =>
                     this.updateItemContent(viewId, content)
                   }

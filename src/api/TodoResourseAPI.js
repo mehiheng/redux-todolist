@@ -1,28 +1,67 @@
 import Todo from '../model/Todo';
+import axios from 'axios';
 
 const todosAPI = {
-  todos: [],
-  add(item) {
-    this.todos.push(item);
+  status: Todo.ALL,
+
+  url: 'http://localhost:8080/api/todos',
+
+  add(item, statusOfList, successCallBack) {
+    axios
+      .post(this.url, item)
+      .then(response => {
+        this.filerByStatus(statusOfList, successCallBack);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   },
-  filerByStatus(status) {
+
+  filerByStatus(status, successCallBack) {
+    let url = this.url;
     if (status === Todo.ALL) {
-      return this.todos;
+      url += '/search/statusOfTodos?status=completed,active';
+    } else if (status === Todo.ACTIVE) {
+      url += '/search/statusOfTodos?status=active';
+    } else {
+      url += '/search/statusOfTodos?status=completed';
     }
-    console.log(this.todos);
-    return this.todos.filter(item => item.status === status);
+    axios
+      .get(url)
+      .then(response => {
+        //this.todos = response.data._embedded.todos;
+        //console.log(111222)
+        successCallBack(response.data._embedded.todos);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   },
-  toggleActive(viewId) {
-    let todo = this.todos.find(item => item.viewId === viewId);
-    if (todo !== undefined) {
-      todo.toggleActive();
-    }
+
+  toggleActive(item, statusOfList, successCallBack) {
+    console.log('33333' + item);
+    const newStatus = item.status === 'completed' ? 'active' : 'completed';
+    axios
+      .patch(`//localhost:8080/api/todos/${item.id}`, { status: newStatus })
+      .then(response => {
+        //successCallBack(response.data._embedded.todos);
+        this.filerByStatus(statusOfList, successCallBack);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   },
-  updateItemContent(viewId, content) {
-    let todo = this.todos.find(item => item.viewId === viewId);
-    if (todo !== undefined) {
-      todo.content = content;
-    }
+
+  updateItemContent(viewId, content, statusOfList, successCallBack) {
+    axios
+      .patch(`//localhost:8080/api/todos/${viewId}`, { content: content })
+      .then(response => {
+        //successCallBack(response.data._embedded.todos)
+        this.filerByStatus(statusOfList, successCallBack);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 export default todosAPI;
