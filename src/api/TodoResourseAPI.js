@@ -39,7 +39,6 @@ const todosAPI = {
   },
 
   toggleActive(item, statusOfList, successCallBack) {
-    console.log('33333' + item);
     const newStatus = item.status === 'completed' ? 'active' : 'completed';
     axios
       .patch(`//localhost:8080/api/todos/${item.id}`, { status: newStatus })

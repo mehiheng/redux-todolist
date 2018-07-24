@@ -4,6 +4,7 @@ import Todo from './model/Todo';
 import TodoItem from './component/TodoItem';
 import classNames from 'classnames';
 import todosAPI from './api/TodoResourseAPI';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 export default class App extends Component {
   constructor(props) {
@@ -87,8 +88,8 @@ export default class App extends Component {
         <div>
           <ul className="filters">
             <li>
-              <a
-                href="#all"
+              <Link
+                to="/all"
                 onClick={e => this.showFilterList(e)}
                 data-filter="all"
                 className={classNames({
@@ -96,11 +97,11 @@ export default class App extends Component {
                 })}
               >
                 ALL
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#active"
+              <Link
+                to="/active"
                 onClick={e => this.showFilterList(e)}
                 data-filter="active"
                 className={classNames({
@@ -108,11 +109,11 @@ export default class App extends Component {
                 })}
               >
                 Active
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#completed"
+              <Link
+                to="/completed"
                 onClick={e => this.showFilterList(e)}
                 data-filter="completed"
                 className={classNames({
@@ -120,7 +121,7 @@ export default class App extends Component {
                 })}
               >
                 Complete
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
